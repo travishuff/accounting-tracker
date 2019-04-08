@@ -70,7 +70,7 @@ exports.sell = async (req, res, next) => {
         if (number > 50 || number < 1) {
             return res.status(400).send('1-50 bananas per order');
         }
-        if (!sellDate || !moment(buyDate, 'YYYY-MM-DD', true).isValid()) {
+        if (!sellDate || !moment(sellDate, 'YYYY-MM-DD', true).isValid()) {
             return res.status(400).send('"sellDate" must be of the form "YYYY-MM-DD"');
         }
 
