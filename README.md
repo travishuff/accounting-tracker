@@ -29,7 +29,7 @@ Your interface should have 3 main views, and a header that allows for navigation
     - OPTIONAL: A table of all bananas grouped primarily by buy buyDate and secondly by sellDate with the following columns:
         - buyDate
         - sellDate (the sell date if sold, null if not sold, 'EXPIRED' if not sold and past expiration)
-        - Number of bananas bought on that buyDate and sold on a given date / not yet sold / expired
+        - Number of bananas bought on that buyDate and sold on a given date / not yet sold / expired  
         Example: 3 bananas are bought on 2019-05-01. One banana is sold on 2019-05-02. 
         If the analytics are viewed on 2019-05-10, there will be 2 rows in the table: 
             - buydate: 2019-05-01, sellDate: 2019-05-02, # bananas: 1
