@@ -28,8 +28,15 @@ Your interface should have 3 main views, and a header that allows for navigation
     - Net profit or loss value to date.
     - OPTIONAL: A table of all bananas grouped primarily by buy buyDate and secondly by sellDate with the following columns:
         - buyDate
-        - sellDate (the sell date if sold, empty if not sold, 'EXPIRED' if not sold and past expiration)
+        - sellDate (the sell date if sold, null if not sold, 'EXPIRED' if not sold and past expiration)
         - Number of bananas bought on that buyDate and sold on a given date / not yet sold / expired
+        Example: 3 bananas are bought on 2019-05-01. One banana is sold on 2019-05-02. 
+        If the analytics are viewed on 2019-05-10, there will be 2 rows in the table: 
+            - buydate: 2019-05-01, sellDate: 2019-05-02, # bananas: 1
+            - buydate: 2019-05-01, sellDate: null, # bananas: 1
+        If the analytics are viewed on 2019-05-11, there will be still 2 rows in the table: 
+            - buydate: 2019-05-01, sellDate: 2019-05-02, # bananas: 1
+            - buydate: 2019-05-01, sellDate: EXPIRED, # bananas: 1
 
 # Backend
 The backend contains only 3 routes:
@@ -70,6 +77,8 @@ Bananas are represented as an object of this shape:
 Newly created bananas have a `sellDate` of null. A value is assigned when they are sold. Since expiration date is not stored in the db, you'll have to manage that logic in your frontend code.
 
 The banana "database" persists only in memory: it is cleared whenever the server is restarted.
+
+Given the simple nature of the backend, you'll have to manage the necessary data manipulations on the frontend. While this may not be the best application design, it does give you a chance to flex your muscles.
 
 ## Install
 From the root of this repo: `npm install` or `yarn`
