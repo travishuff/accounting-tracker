@@ -34,7 +34,7 @@ Your interface should have 3 main views, and a header that allows for navigation
         If the analytics are viewed on 2019-05-10, there will be 2 rows in the table: 
             - buydate: 2019-05-01, sellDate: 2019-05-02, # bananas: 1
             - buydate: 2019-05-01, sellDate: null, # bananas: 1
-        If the analytics are viewed on 2019-05-11, there will be still 2 rows in the table: 
+        If the analytics are viewed on 2019-05-11, there will be still 2 rows in the table:  
             - buydate: 2019-05-01, sellDate: 2019-05-02, # bananas: 1
             - buydate: 2019-05-01, sellDate: EXPIRED, # bananas: 1
 
