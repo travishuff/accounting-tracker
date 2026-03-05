@@ -1,5 +1,46 @@
 .logo {
-  height: 30px;
-  width: 30px;
-  margin-right: 10px !important;
+  width: 2rem;
+  height: 2rem;
+}
+
+.app-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.9rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(255, 250, 231, 0.88);
+  border-bottom: 1px solid rgba(33, 40, 18, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.nav-link {
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  color: #465119;
+  font-weight: 600;
+}
+
+.nav-link:hover,
+.nav-link-active {
+  background: rgba(169, 128, 5, 0.13);
+  color: #2d3818;
 }

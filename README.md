@@ -1,31 +1,52 @@
 # Banana Tracker
 
-A bananas accounting system!
+A React 19 inventory and reporting app for tracking banana purchases, sales, and
+margin scenarios.
 
-## Build
+## Requirements
+
+- Node.js 20.19+ or 22.12+
+- npm 10+
+
+## Install
 
 `npm install`
 
 ## Run
 
-From the root of this repo: `npm run dev`
+From the root of this repo:
 
-By default, the server runs on localhost TCP port 1234
+`npm run dev`
+
+Vite serves the app on localhost and prints the active URL in the terminal.
+
+If you manage Node with `nvm`, switch into a compatible runtime before running
+the scripts:
+
+`nvm use 25.8.0`
+
+## Build
+
+`npm run build`
+
+## Verify
+
+- `npm test`
+- `npm run lint`
+- `npm run format:check`
+
+## API Configuration
+
+By default, the frontend calls `http://localhost:8080/api/bananas`.
+
+To point at a different backend, create a `.env` file and set:
+
+`VITE_API_BASE_URL=http://your-host:your-port`
 
 ## Backend
 
-In `bananas-backend` folder
+The backend is expected to expose these endpoints:
 
-Some useful CURL requests for testing the backend:
-
-POST:
-
-`curl -d '{"number": 5, "buyDate": "2019-05-01"}' -H "Content-Type: application/json" -X POST http://localhost:8080/api/bananas`
-
-PUT:
-
-`curl -H 'Content-Type: application/json' -X PUT -d '{"number": 5, "sellDate": "2019-05-06"}' http://localhost:8080/api/bananas`
-
-GET:
-
-`curl http://localhost:8080/api/bananas`
+- `POST /api/bananas` with `{"number": 5, "buyDate": "2019-05-01"}`
+- `PUT /api/bananas` with `{"number": 5, "sellDate": "2019-05-06"}`
+- `GET /api/bananas`

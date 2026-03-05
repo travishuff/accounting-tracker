@@ -2,17 +2,17 @@
   "name": "banana-tracker",
   "version": "1.0.0",
   "description": "A bananas accounting system",
-  "main": "src/App.js",
+  "type": "module",
   "scripts": {
-    "build": "parcel build src/index.html",
-    "dev": "parcel src/index.html",
-    "format": "prettier --write \"src/**/*.{js,jsx,css,json}\"",
-    "format:check": "prettier --list-different \"src/**/*.{js,jsx,css,json}\"",
-    "lint": "eslint \"src/**/*.{js,jsx}\"",
-    "test": "jest --silent",
-    "test:coverage": "jest --silent --coverage",
-    "test:update": "jest --silent -u",
-    "test:watch": "jest --silent --watch"
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
@@ -25,35 +25,26 @@
     "url": "https://github.com/travishuff/banana-tracker/issues"
   },
   "homepage": "https://github.com/travishuff/banana-tracker#readme",
-  "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
-    "@babel/plugin-transform-runtime": "^7.7.6",
-    "@babel/preset-env": "^7.7.7",
-    "@babel/preset-react": "^7.7.4",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.17.0",
-    "jest": "^24.9.0",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "^1.19.1",
-    "react-test-renderer": "^16.12.0"
-  },
   "dependencies": {
-    "@reach/router": "^1.2.1",
-    "axios": "^0.21.1",
-    "date-fns": "^1.30.1",
-    "lodash": "^4.17.21",
-    "prop-types": "^15.7.2",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-loadable": "^5.5.0",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.87.3"
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router": "^7.13.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitejs/plugin-react": "^5.1.4",
+    "@vitest/coverage-v8": "^4.0.18",
+    "eslint": "^9.39.3",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^17.4.0",
+    "jsdom": "^28.1.0",
+    "prettier": "^3.8.1",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
   }
 }
