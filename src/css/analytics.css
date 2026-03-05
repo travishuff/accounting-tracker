@@ -1,29 +1,3 @@
-.row-title {
-  color: white;
-  font-weight: 700;
-  background-color: #a08804;
-  padding: 7px 0;
-}
-
-.row-subtitle {
-  font-weight: 700;
-  background-color: #b5d3ff;
-  padding: 3px 0;
-}
-
-.row-data {
-  min-width: 140px;
-  padding: 3px 0;
-}
-
-button {
-  margin-bottom: 10px !important;
-}
-
-.button-text {
-  color: #fff;
-}
-
-.button-text:hover {
-  color: #fff;
+.data-table tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.5);
 }
