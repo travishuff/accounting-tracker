@@ -1,49 +1,54 @@
 import { useState } from 'react'
-import { useLoaderData, useRevalidator } from 'react-router'
+import type { ChangeEvent, FormEvent } from 'react'
 
-import { sellBananas } from './api/bananas'
+import { buyBananas } from './api/bananas'
 import { getTodayDate, isOnOrAfter } from './lib/date'
-import { getAvailableBananas, getUnsoldBananas } from './lib/bananaUtils'
 
-const INITIAL_FORM = {
-  number: '',
-  sellDate: '',
+type BuyForm = {
+  buyDate: string
+  number: string
 }
 
-const Sell = () => {
-  const bananas = useLoaderData()
-  const revalidator = useRevalidator()
-  const [form, setForm] = useState(INITIAL_FORM)
-  const [errors, setErrors] = useState({})
-  const [feedback, setFeedback] = useState(null)
+type Feedback = {
+  message: string
+  type: 'error' | 'success'
+}
+
+type FieldErrors = Partial<Record<keyof BuyForm, string | undefined>>
+
+const INITIAL_FORM: BuyForm = {
+  buyDate: '',
+  number: '',
+}
+
+const Buy = () => {
+  const [form, setForm] = useState<BuyForm>(INITIAL_FORM)
+  const [errors, setErrors] = useState<FieldErrors>({})
+  const [feedback, setFeedback] = useState<Feedback | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const unsoldBananas = getUnsoldBananas(bananas)
-  const availableBananas = getAvailableBananas(unsoldBananas, form.sellDate)
-
   const validate = () => {
-    const nextErrors = {}
+    const nextErrors: FieldErrors = {}
     const quantity = Number(form.number)
 
-    if (!form.sellDate || !isOnOrAfter(form.sellDate, getTodayDate())) {
-      nextErrors.sellDate = 'Choose today or a future sale date.'
+    if (!form.buyDate || !isOnOrAfter(form.buyDate, getTodayDate())) {
+      nextErrors.buyDate = 'Choose today or a future purchase date.'
     }
 
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 50) {
       nextErrors.number = 'Enter a quantity from 1 to 50 bananas.'
-    } else if (quantity > availableBananas.length) {
-      nextErrors.number = `Only ${availableBananas.length} bananas can be sold on that date.`
     }
 
     setErrors(nextErrors)
     return Object.keys(nextErrors).length === 0
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    setForm((current) => ({ ...current, [name]: value }))
+    const field = name as keyof BuyForm
+    setForm((current) => ({ ...current, [field]: value }))
     setFeedback(null)
-    setErrors((current) => ({ ...current, [name]: undefined }))
+    setErrors((current) => ({ ...current, [field]: undefined }))
   }
 
   const resetForm = () => {
@@ -52,7 +57,7 @@ const Sell = () => {
     setFeedback(null)
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     if (!validate()) {
@@ -66,17 +71,19 @@ const Sell = () => {
     setIsSubmitting(true)
 
     try {
-      await sellBananas({
+      await buyBananas({
+        buyDate: form.buyDate,
         number: Number(form.number),
-        sellDate: form.sellDate,
       })
       setForm(INITIAL_FORM)
       setErrors({})
-      setFeedback({ message: 'You sold bananas.', type: 'success' })
-      revalidator.revalidate()
-    } catch (error) {
+      setFeedback({ message: 'You bought bananas.', type: 'success' })
+    } catch (error: unknown) {
       setFeedback({
-        message: error.message || 'The sale request failed.',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'The purchase request failed.',
         type: 'error',
       })
     } finally {
@@ -88,15 +95,11 @@ const Sell = () => {
     <main className="page">
       <section className="card stack">
         <div>
-          <h1 className="page-title">Sell Bananas</h1>
+          <h1 className="page-title">Buy Bananas</h1>
           <p className="section-copy">
-            Sales are constrained by inventory availability and the 10-day shelf
-            life window.
+            Record a purchase batch. The backend expands the quantity into
+            individual banana rows.
           </p>
-        </div>
-        <div className="info-strip">
-          <span>{unsoldBananas.length} unsold bananas in inventory</span>
-          <span>{availableBananas.length} sellable on the selected date</span>
         </div>
         <form className="stack" onSubmit={handleSubmit}>
           <div className="form-row">
@@ -117,16 +120,16 @@ const Sell = () => {
               ) : null}
             </label>
             <label className="field">
-              <span className="field-label">Sale date</span>
+              <span className="field-label">Purchase date</span>
               <input
                 className="field-input"
-                name="sellDate"
+                name="buyDate"
                 type="date"
-                value={form.sellDate}
+                value={form.buyDate}
                 onChange={handleChange}
               />
-              {errors.sellDate ? (
-                <span className="field-error">{errors.sellDate}</span>
+              {errors.buyDate ? (
+                <span className="field-error">{errors.buyDate}</span>
               ) : null}
             </label>
           </div>
@@ -157,4 +160,4 @@ const Sell = () => {
   )
 }
 
-export default Sell
+export default Buy

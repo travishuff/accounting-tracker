@@ -2,7 +2,7 @@ import './css/nav-bar.css'
 import banana from '../images/banana-logo.png'
 import { Link, NavLink } from 'react-router'
 
-const navClassName = ({ isActive }) =>
+const navClassName = ({ isActive }: { isActive: boolean }) =>
   isActive ? 'nav-link nav-link-active' : 'nav-link'
 
 const NavBar = () => {

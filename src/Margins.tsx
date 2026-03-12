@@ -1,4 +1,12 @@
-const Margins = ({ buyPrice, sellPrice, handlePriceChange }) => {
+import type { ChangeEventHandler } from 'react'
+
+type MarginsProps = {
+  buyPrice: number
+  sellPrice: number
+  handlePriceChange: ChangeEventHandler<HTMLInputElement>
+}
+
+const Margins = ({ buyPrice, sellPrice, handlePriceChange }: MarginsProps) => {
   return (
     <section className="card stack">
       <div>

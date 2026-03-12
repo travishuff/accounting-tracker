@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-const useLocalStorageState = (key, initialValue) => {
-  const [value, setValue] = useState(() => {
+const useLocalStorageState = <T>(key: string, initialValue: T) => {
+  const [value, setValue] = useState<T>(() => {
     if (typeof window === 'undefined') {
       return initialValue
     }
@@ -12,7 +12,7 @@ const useLocalStorageState = (key, initialValue) => {
     }
 
     try {
-      return JSON.parse(storedValue)
+      return JSON.parse(storedValue) as T
     } catch {
       return initialValue
     }
@@ -22,7 +22,7 @@ const useLocalStorageState = (key, initialValue) => {
     window.localStorage.setItem(key, JSON.stringify(value))
   }, [key, value])
 
-  return [value, setValue]
+  return [value, setValue] as const
 }
 
 export default useLocalStorageState

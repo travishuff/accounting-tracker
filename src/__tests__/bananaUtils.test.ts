@@ -6,6 +6,8 @@ import {
 } from '../lib/bananaUtils'
 import { DB } from '../testDB'
 
+const SELLABLE_DATE = '2019-07-05'
+
 describe('bananaUtils', () => {
   test('filters bananas by purchase and sale date range', () => {
     expect(getBananasByTime(DB, '2019-06-01', '2019-06-30')).toEqual([
@@ -26,7 +28,7 @@ describe('bananaUtils', () => {
     expect(
       getAvailableBananas(
         DB.filter((banana) => banana.sellDate === null),
-        '2019-07-05'
+        SELLABLE_DATE
       )
     ).toHaveLength(2)
   })

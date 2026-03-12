@@ -34,6 +34,7 @@ the scripts:
 - `npm test`
 - `npm run lint`
 - `npm run format:check`
+- `npm run typecheck`
 
 ## API Configuration
 

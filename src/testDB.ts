@@ -1,4 +1,6 @@
-export const DB = [
+import type { Banana } from './types'
+
+export const DB: Banana[] = [
   {
     id: 'ba7e45a1-2bf0-4050-a331-ca67d29b033e',
     buyDate: '2019-05-24',

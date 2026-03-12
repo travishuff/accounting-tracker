@@ -5,8 +5,13 @@ import {
   isAfter,
   isExpiredOn,
 } from './date'
+import type { Banana, BananaGroup } from '../types'
 
-export const getBananasByTime = (bananas, start, end) =>
+export const getBananasByTime = (
+  bananas: Banana[],
+  start: string,
+  end: string
+) =>
   bananas.filter(({ buyDate, sellDate }) => {
     const boughtInRange = buyDate >= start && buyDate <= end
     const soldInRange =
@@ -15,35 +20,39 @@ export const getBananasByTime = (bananas, start, end) =>
     return boughtInRange && soldInRange
   })
 
-export const getSoldBananas = (bananas) =>
+export const getSoldBananas = (bananas: Banana[]) =>
   bananas.filter(({ sellDate }) => sellDate !== null)
 
-export const getUnsoldBananas = (bananas) =>
+export const getUnsoldBananas = (bananas: Banana[]) =>
   bananas.filter(({ sellDate }) => sellDate === null)
 
-export const getExpiredBananas = (bananas, referenceDate = getTodayDate()) =>
-  bananas.filter(({ buyDate }) => isExpiredOn(buyDate, referenceDate))
+export const getExpiredBananas = (
+  bananas: Banana[],
+  referenceDate: string = getTodayDate()
+) => bananas.filter(({ buyDate }) => isExpiredOn(buyDate, referenceDate))
 
-export const getUnexpiredBananas = (bananas, referenceDate = getTodayDate()) =>
-  bananas.filter(({ buyDate }) => !isExpiredOn(buyDate, referenceDate))
+export const getUnexpiredBananas = (
+  bananas: Banana[],
+  referenceDate: string = getTodayDate()
+) => bananas.filter(({ buyDate }) => !isExpiredOn(buyDate, referenceDate))
 
 export const getUnsoldExpiredBananas = (
-  bananas,
-  referenceDate = getTodayDate()
+  bananas: Banana[],
+  referenceDate: string = getTodayDate()
 ) =>
   getExpiredBananas(bananas, referenceDate).filter(
     ({ sellDate }) => sellDate === null
   )
 
 export const getUnsoldUnexpiredBananas = (
-  bananas,
-  referenceDate = getTodayDate()
+  bananas: Banana[],
+  referenceDate: string = getTodayDate()
 ) =>
   getUnexpiredBananas(bananas, referenceDate).filter(
     ({ sellDate }) => sellDate === null
   )
 
-export const getAvailableBananas = (bananas, sellDate) =>
+export const getAvailableBananas = (bananas: Banana[], sellDate?: string) =>
   bananas.filter(({ buyDate }) => {
     if (!sellDate) {
       return true
@@ -56,7 +65,11 @@ export const getAvailableBananas = (bananas, sellDate) =>
     return isAfter(addDays(buyDate, BANANA_SHELF_LIFE_DAYS), sellDate)
   })
 
-export const sortBananas = (bananas, column, direction) => {
+export const sortBananas = (
+  bananas: Banana[],
+  column: keyof Banana,
+  direction: 'ascending' | 'descending'
+) => {
   const sorted = [...bananas].sort((left, right) => {
     const leftValue = `${left[column] ?? ''}`
     const rightValue = `${right[column] ?? ''}`
@@ -67,7 +80,10 @@ export const sortBananas = (bananas, column, direction) => {
   return direction === 'descending' ? sorted.reverse() : sorted
 }
 
-export const groupBananas = (bananas, referenceDate = getTodayDate()) => {
+export const groupBananas = (
+  bananas: Banana[],
+  referenceDate: string = getTodayDate()
+): BananaGroup[] => {
   const groups = bananas
     .map((banana) => ({
       ...banana,
@@ -102,12 +118,12 @@ export const groupBananas = (bananas, referenceDate = getTodayDate()) => {
         sellDate: banana.displaySellDate ?? 'null',
       })
       return all
-    }, new Map())
+    }, new Map<string, BananaGroup>())
 
   return Array.from(groups.values())
 }
 
-export const formatCurrency = (value) =>
+export const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-US', {
     currency: 'USD',
     minimumFractionDigits: 2,

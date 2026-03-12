@@ -2,9 +2,10 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter, useLoaderData } from 'react-router'
 
 import Analytics from '../Analytics'
+import type { Banana } from '../types'
 
 vi.mock('react-router', async (importOriginal) => {
-  const actual = await importOriginal()
+  const actual = (await importOriginal()) as typeof import('react-router')
 
   return {
     ...actual,
@@ -12,7 +13,9 @@ vi.mock('react-router', async (importOriginal) => {
   }
 })
 
-const ANALYTICS_DB = [
+const mockedUseLoaderData = vi.mocked(useLoaderData)
+
+const ANALYTICS_DB: Banana[] = [
   {
     id: 'banana-1',
     buyDate: '2026-03-01',
@@ -28,7 +31,7 @@ const ANALYTICS_DB = [
 describe('Analytics', () => {
   beforeEach(() => {
     window.localStorage.clear()
-    useLoaderData.mockReturnValue(ANALYTICS_DB)
+    mockedUseLoaderData.mockReturnValue(ANALYTICS_DB)
   })
 
   afterEach(() => {
@@ -59,9 +62,9 @@ describe('Analytics', () => {
     const buyPriceInput = await screen.findByLabelText(/buy price/i)
     fireEvent.change(buyPriceInput, { target: { value: '0.55' } })
 
-    expect(
-      JSON.parse(window.localStorage.getItem('banana-tracker.analytics'))
-    ).toEqual(
+    const stored = window.localStorage.getItem('banana-tracker.analytics')
+    expect(stored).not.toBeNull()
+    expect(JSON.parse(stored as string)).toEqual(
       expect.objectContaining({
         buyPrice: 0.55,
       })
