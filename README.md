@@ -1,6 +1,6 @@
 # Banana Tracker
 
-![Version](https://img.shields.io/github/package-json/v/travishuff/accounting-tracker?label=version)
+![Version](https://img.shields.io/github/package-json/v/travishuff/accounting-tracker?label=version&cacheSeconds=300)
 
 A React 19 inventory and reporting app for tracking banana purchases, sales, and
 margin scenarios.
