@@ -1,5 +1,7 @@
 # Banana Tracker
 
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+
 A React 19 inventory and reporting app for tracking banana purchases, sales, and
 margin scenarios.
 
@@ -35,6 +37,14 @@ the scripts:
 - `npm run lint`
 - `npm run format:check`
 - `npm run typecheck`
+
+## Versioning
+
+Every merged PR bumps the version automatically based on labels:
+
+- `semver:major`
+- `semver:minor`
+- `semver:patch` (default if no semver label is applied)
 
 ## API Configuration
 
