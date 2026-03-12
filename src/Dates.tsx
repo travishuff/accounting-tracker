@@ -1,4 +1,12 @@
-const Dates = ({ end, handleDateChange, start }) => {
+import type { ChangeEventHandler } from 'react'
+
+type DatesProps = {
+  end: string
+  handleDateChange: ChangeEventHandler<HTMLInputElement>
+  start: string
+}
+
+const Dates = ({ end, handleDateChange, start }: DatesProps) => {
   return (
     <div className="form-row">
       <label className="field">

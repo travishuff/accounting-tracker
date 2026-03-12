@@ -1,9 +1,10 @@
 import { Link, useLoaderData } from 'react-router'
 
 import { groupBananas } from './lib/bananaUtils'
+import type { Banana } from './types'
 
 const GroupList = () => {
-  const bananas = useLoaderData()
+  const bananas = useLoaderData<Banana[]>()
   const groupedBananas = groupBananas(bananas)
 
   return (

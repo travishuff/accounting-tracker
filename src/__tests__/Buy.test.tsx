@@ -2,9 +2,21 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 import Buy from '../Buy'
 
+vi.mock('../lib/date', async (importOriginal) => {
+  const actual = (await importOriginal()) as typeof import('../lib/date')
+
+  return {
+    ...actual,
+    getTodayDate: () => '2026-03-05',
+  }
+})
+
 describe('Buy', () => {
+  let fetchMock: ReturnType<typeof vi.fn>
+
   beforeEach(() => {
-    vi.stubGlobal('fetch', vi.fn())
+    fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch)
   })
 
   afterEach(() => {
@@ -12,7 +24,7 @@ describe('Buy', () => {
   })
 
   test('submits a valid purchase request', async () => {
-    fetch.mockResolvedValue({
+    fetchMock.mockResolvedValue({
       json: async () => ({ ok: true }),
       ok: true,
       status: 200,
@@ -32,7 +44,7 @@ describe('Buy', () => {
       expect(screen.getByText(/you bought bananas/i)).toBeInTheDocument()
     )
 
-    expect(fetch).toHaveBeenCalledWith(
+    expect(fetchMock).toHaveBeenCalledWith(
       'http://localhost:8080/api/bananas',
       expect.objectContaining({
         body: JSON.stringify({ buyDate: '2026-03-06', number: 12 }),

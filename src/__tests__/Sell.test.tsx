@@ -2,9 +2,19 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter, useLoaderData, useRevalidator } from 'react-router'
 
 import Sell from '../Sell'
+import type { Banana } from '../types'
+
+vi.mock('../lib/date', async (importOriginal) => {
+  const actual = (await importOriginal()) as typeof import('../lib/date')
+
+  return {
+    ...actual,
+    getTodayDate: () => '2026-03-05',
+  }
+})
 
 vi.mock('react-router', async (importOriginal) => {
-  const actual = await importOriginal()
+  const actual = (await importOriginal()) as typeof import('react-router')
 
   return {
     ...actual,
@@ -13,7 +23,10 @@ vi.mock('react-router', async (importOriginal) => {
   }
 })
 
-const SELLABLE_BANANAS = [
+const mockedUseLoaderData = vi.mocked(useLoaderData)
+const mockedUseRevalidator = vi.mocked(useRevalidator)
+
+const SELLABLE_BANANAS: Banana[] = [
   {
     id: 'banana-1',
     buyDate: '2026-03-01',
@@ -27,10 +40,13 @@ const SELLABLE_BANANAS = [
 ]
 
 describe('Sell', () => {
+  let fetchMock: ReturnType<typeof vi.fn>
+
   beforeEach(() => {
-    vi.stubGlobal('fetch', vi.fn())
-    useLoaderData.mockReturnValue(SELLABLE_BANANAS)
-    useRevalidator.mockReturnValue({
+    fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch)
+    mockedUseLoaderData.mockReturnValue(SELLABLE_BANANAS)
+    mockedUseRevalidator.mockReturnValue({
       revalidate: vi.fn(),
       state: 'idle',
     })
@@ -66,7 +82,7 @@ describe('Sell', () => {
   })
 
   test('submits a valid sale request', async () => {
-    fetch.mockResolvedValue({
+    fetchMock.mockResolvedValue({
       json: async () => ({ ok: true }),
       ok: true,
       status: 200,

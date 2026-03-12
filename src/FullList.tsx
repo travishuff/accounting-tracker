@@ -2,10 +2,16 @@ import { useState } from 'react'
 import { Link, useLoaderData } from 'react-router'
 
 import { sortBananas } from './lib/bananaUtils'
+import type { Banana } from './types'
+
+type SortConfig = {
+  column: keyof Banana
+  direction: 'ascending' | 'descending'
+}
 
 const FullList = () => {
-  const bananas = useLoaderData()
-  const [sortConfig, setSortConfig] = useState({
+  const bananas = useLoaderData<Banana[]>()
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
     column: 'id',
     direction: 'ascending',
   })
@@ -16,7 +22,7 @@ const FullList = () => {
     sortConfig.direction
   )
 
-  const handleSort = (column) => {
+  const handleSort = (column: keyof Banana) => {
     setSortConfig((current) => ({
       column,
       direction:
@@ -26,7 +32,7 @@ const FullList = () => {
     }))
   }
 
-  const sortLabel = (column) =>
+  const sortLabel = (column: keyof Banana) =>
     sortConfig.column === column ? ` (${sortConfig.direction})` : ''
 
   return (

@@ -1,4 +1,5 @@
 import { Link, useLoaderData } from 'react-router'
+import type { ChangeEvent } from 'react'
 
 import './css/analytics.css'
 
@@ -13,8 +14,16 @@ import {
   getUnsoldUnexpiredBananas,
 } from './lib/bananaUtils'
 import { endOfCurrentMonth, startOfCurrentMonth } from './lib/date'
+import type { Banana } from './types'
 
-const DEFAULT_ANALYTICS_SETTINGS = {
+type AnalyticsSettings = {
+  buyPrice: number
+  end: string
+  sellPrice: number
+  start: string
+}
+
+const DEFAULT_ANALYTICS_SETTINGS: AnalyticsSettings = {
   buyPrice: 0.2,
   end: endOfCurrentMonth(),
   sellPrice: 0.35,
@@ -22,8 +31,8 @@ const DEFAULT_ANALYTICS_SETTINGS = {
 }
 
 const Analytics = () => {
-  const bananas = useLoaderData()
-  const [settings, setSettings] = useLocalStorageState(
+  const bananas = useLoaderData<Banana[]>()
+  const [settings, setSettings] = useLocalStorageState<AnalyticsSettings>(
     'banana-tracker.analytics',
     DEFAULT_ANALYTICS_SETTINGS
   )
@@ -44,19 +53,21 @@ const Analytics = () => {
   const potentialProfit =
     soldBananasValue + unsoldUnexpiredBananasValue - totalBananasCost
 
-  const handlePriceChange = (event) => {
+  const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
+    const field = name as keyof AnalyticsSettings
     setSettings((current) => ({
       ...current,
-      [name]: Number(value),
+      [field]: Number(value),
     }))
   }
 
-  const handleDateChange = (event) => {
+  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
+    const field = name as keyof AnalyticsSettings
     setSettings((current) => ({
       ...current,
-      [name]: value,
+      [field]: value,
     }))
   }
 
@@ -135,7 +146,7 @@ const Analytics = () => {
                 </td>
               </tr>
               <tr>
-                <td colSpan="3" className="table-summary-label">
+                <td colSpan={3} className="table-summary-label">
                   Potential Profit/Loss
                 </td>
                 <td className={potentialProfit >= 0 ? 'positive' : 'negative'}>
@@ -173,7 +184,7 @@ const Analytics = () => {
                 <td className="negative">{formatCurrency(totalBananasCost)}</td>
               </tr>
               <tr>
-                <td colSpan="3" className="table-summary-label">
+                <td colSpan={3} className="table-summary-label">
                   Profit/Loss
                 </td>
                 <td className={totalProfit >= 0 ? 'positive' : 'negative'}>
