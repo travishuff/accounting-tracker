@@ -70,4 +70,135 @@ describe('Analytics', () => {
       })
     )
   })
+
+  test('snaps a stale prior-month default range forward to the current month', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2026, 4, 12))
+
+    window.localStorage.setItem(
+      'banana-tracker.analytics',
+      JSON.stringify({
+        buyPrice: 0.2,
+        end: '2026-03-31',
+        sellPrice: 0.35,
+        start: '2026-03-01',
+      })
+    )
+
+    try {
+      render(
+        <MemoryRouter>
+          <Analytics />
+        </MemoryRouter>
+      )
+
+      const startInput = (await screen.findByLabelText(
+        /start date/i
+      )) as HTMLInputElement
+      const endInput = screen.getByLabelText(/end date/i) as HTMLInputElement
+
+      expect(startInput.value).toBe('2026-05-01')
+      expect(endInput.value).toBe('2026-05-31')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  test('does not snap a user-chosen range that is not a full prior month', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2026, 4, 12))
+
+    window.localStorage.setItem(
+      'banana-tracker.analytics',
+      JSON.stringify({
+        buyPrice: 0.2,
+        end: '2026-03-15',
+        sellPrice: 0.35,
+        start: '2026-03-05',
+      })
+    )
+
+    try {
+      render(
+        <MemoryRouter>
+          <Analytics />
+        </MemoryRouter>
+      )
+
+      const startInput = (await screen.findByLabelText(
+        /start date/i
+      )) as HTMLInputElement
+      const endInput = screen.getByLabelText(/end date/i) as HTMLInputElement
+
+      expect(startInput.value).toBe('2026-03-05')
+      expect(endInput.value).toBe('2026-03-15')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  test('shows a hint when loader returned bananas but the date filter drops them all', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2026, 4, 12))
+
+    // Pin a range that contains none of the test bananas (which are dated 2026-03-*),
+    // using a non-month-boundary so the snap-forward logic does not fire.
+    window.localStorage.setItem(
+      'banana-tracker.analytics',
+      JSON.stringify({
+        buyPrice: 0.2,
+        end: '2026-05-12',
+        sellPrice: 0.35,
+        start: '2026-05-02',
+      })
+    )
+
+    try {
+      render(
+        <MemoryRouter>
+          <Analytics />
+        </MemoryRouter>
+      )
+
+      expect(
+        await screen.findByText(/no bananas fall inside the selected date range/i)
+      ).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  test('does not show the empty-range hint when at least one banana matches', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2026, 2, 15))
+
+    // Pin a range that contains the test bananas; the module-level defaults
+    // were computed at real import time and won't match the fake clock.
+    window.localStorage.setItem(
+      'banana-tracker.analytics',
+      JSON.stringify({
+        buyPrice: 0.2,
+        end: '2026-03-31',
+        sellPrice: 0.35,
+        start: '2026-03-01',
+      })
+    )
+
+    try {
+      render(
+        <MemoryRouter>
+          <Analytics />
+        </MemoryRouter>
+      )
+
+      // Wait for any effects to settle so a late-rendered hint would be caught.
+      await screen.findByRole('heading', { name: /analytics/i })
+
+      expect(
+        screen.queryByText(/no bananas fall inside the selected date range/i)
+      ).not.toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
 })
