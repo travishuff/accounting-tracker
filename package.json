@@ -1,6 +1,6 @@
 {
   "name": "banana-tracker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A bananas accounting system",
   "type": "module",
   "scripts": {
