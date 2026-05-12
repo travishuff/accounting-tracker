@@ -51,3 +51,17 @@ export const isExpiredOn = (
   buyDate: string,
   referenceDate: string = getTodayDate()
 ) => differenceInCalendarDays(referenceDate, buyDate) > BANANA_SHELF_LIFE_DAYS
+
+export const isStaleMonthDefault = (
+  start: string,
+  end: string,
+  today: string = getTodayDate()
+) => {
+  const [year, month] = start.split('-').map(Number)
+  if (!year || !month) {
+    return false
+  }
+  const firstDay = formatDateInput(new Date(year, month - 1, 1))
+  const lastDay = formatDateInput(new Date(year, month, 0))
+  return start === firstDay && end === lastDay && end < today
+}

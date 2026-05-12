@@ -199,6 +199,11 @@ input {
   color: #8a2b2b;
 }
 
+.alert-info {
+  background: rgba(63, 132, 199, 0.12);
+  color: #1c4a7a;
+}
+
 .info-strip {
   justify-content: space-between;
   padding: 0.85rem 1rem;

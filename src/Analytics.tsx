@@ -1,4 +1,5 @@
 import { Link, useLoaderData } from 'react-router'
+import { useEffect } from 'react'
 import type { ChangeEvent } from 'react'
 
 import './css/analytics.css'
@@ -13,7 +14,11 @@ import {
   getUnsoldExpiredBananas,
   getUnsoldUnexpiredBananas,
 } from './lib/bananaUtils'
-import { endOfCurrentMonth, startOfCurrentMonth } from './lib/date'
+import {
+  endOfCurrentMonth,
+  isStaleMonthDefault,
+  startOfCurrentMonth,
+} from './lib/date'
 import type { Banana } from './types'
 
 type AnalyticsSettings = {
@@ -36,6 +41,18 @@ const Analytics = () => {
     'banana-tracker.analytics',
     DEFAULT_ANALYTICS_SETTINGS
   )
+
+  useEffect(() => {
+    if (isStaleMonthDefault(settings.start, settings.end)) {
+      setSettings((current) => ({
+        ...current,
+        end: endOfCurrentMonth(),
+        start: startOfCurrentMonth(),
+      }))
+    }
+    // Snap forward once on mount; later edits are intentional and should stick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const scopedBananas = getBananasByTime(bananas, settings.start, settings.end)
   const soldBananas = getSoldBananas(scopedBananas)
@@ -100,6 +117,13 @@ const Analytics = () => {
           handleDateChange={handleDateChange}
           start={settings.start}
         />
+        {bananas.length > 0 && scopedBananas.length === 0 ? (
+          <div className="alert alert-info" role="status">
+            No bananas fall inside the selected date range. {bananas.length}{' '}
+            banana{bananas.length === 1 ? '' : 's'} sit outside it — adjust the
+            dates above or use Reset All Fields to jump back to this month.
+          </div>
+        ) : null}
       </section>
 
       <section className="card stack">
