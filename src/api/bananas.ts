@@ -20,8 +20,8 @@ const request = async <T = unknown>(
     let message = 'Request failed.'
 
     try {
-      const data = (await response.json()) as { message?: string }
-      message = data.message || message
+      const data = (await response.json()) as { error?: string }
+      message = data.error || message
     } catch {
       message = response.statusText || message
     }
@@ -45,7 +45,7 @@ export const buyBananas = (payload: { number: number; buyDate: string }) =>
   })
 
 export const sellBananas = (payload: { number: number; sellDate: string }) =>
-  request('/api/bananas', {
+  request('/api/bananas/sales', {
     body: JSON.stringify(payload),
-    method: 'PUT',
+    method: 'POST',
   })
