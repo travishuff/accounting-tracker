@@ -15,12 +15,15 @@ app consumes.
 - React Router 7 (`createBrowserRouter`, route loaders, `useRevalidator`)
 - TypeScript 5
 - Vite 7 (dev server + build)
+- Bun 1.3.14+ (package manager and script runner)
 - Vitest 4 + Testing Library (jsdom)
 - ESLint 9 (flat config) + Prettier 3
 
 ## Requirements
 
 - Bun `1.3.14+`
+- No external services are required; the app talks to a locally running
+  `banana-backend` API by default.
 
 If you need Bun, install or upgrade it first:
 
@@ -94,11 +97,12 @@ A trailing slash on the value is stripped before requests are made.
 All requests go through [src/api/bananas.ts](src/api/bananas.ts). The app
 expects banana-backend's contract:
 
-| Method | Path                 | Body                   | Success | Notes                                                                          |
-| ------ | -------------------- | ---------------------- | ------- | ------------------------------------------------------------------------------ |
-| `GET`  | `/api/bananas`       | —                      | `200`   | Returns every banana, sorted by insertion order                                |
-| `POST` | `/api/bananas`       | `{ number, buyDate }`  | `201`   | Returns the bananas created by this request                                    |
-| `POST` | `/api/bananas/sales` | `{ number, sellDate }` | `201`   | Atomic — fails with `409 Conflict` if fewer than `number` bananas are eligible |
+| Method   | Path                 | Body                   | Success | Notes                                                                          |
+| -------- | -------------------- | ---------------------- | ------- | ------------------------------------------------------------------------------ |
+| `GET`    | `/api/bananas`       | —                      | `200`   | Returns every banana, sorted by insertion order                                |
+| `POST`   | `/api/bananas`       | `{ number, buyDate }`  | `201`   | Returns the bananas created by this request                                    |
+| `POST`   | `/api/bananas/sales` | `{ number, sellDate }` | `201`   | Atomic — fails with `409 Conflict` if fewer than `number` bananas are eligible |
+| `DELETE` | `/api/database`      | —                      | `200`   | Deletes all banana records and returns `{ deleted }`                           |
 
 Error responses follow the envelope `{ "error": "human-readable message" }`.
 The API client surfaces `data.error` directly to the UI; the `Sell` page, for
@@ -131,33 +135,6 @@ can preview the count before submitting. A banana is **eligible to sell on
 If the user requests more bananas than the eligible count, the form blocks
 submission. As a backstop, the server returns `409 Conflict` and the page
 renders the server's error message.
-
-## Project layout
-
-```
-src/
-  AppLayout.tsx          Outer route shell (nav + <Outlet/>)
-  ErrorPage.tsx          Router errorElement
-  Home.tsx               Landing page
-  Buy.tsx, Sell.tsx      Inventory mutation forms
-  FullList.tsx           Flat ledger view
-  GroupList.tsx          Bananas grouped by buy/sell-date pair
-  Analytics.tsx          Date-range filter + margin scenarios
-  Dates.tsx, Margins.tsx Analytics sub-components
-  NavBar.tsx             Top nav
-  router.tsx             createBrowserRouter config (loaders + lazy routes)
-  main.tsx               Entry point
-  types.ts               Shared Banana / BananaGroup types
-  api/
-    bananas.ts           Fetch wrapper + listBananas / buyBananas / sellBananas
-  lib/
-    bananaUtils.ts       Filtering, grouping, expiry, margin helpers
-    date.ts              ISO date arithmetic + freshness constant
-  hooks/
-    useLocalStorageState.ts
-  css/                   Per-component stylesheets
-  __tests__/             Vitest + Testing Library suites
-```
 
 ## Testing
 
