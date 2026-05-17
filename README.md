@@ -20,20 +20,19 @@ app consumes.
 
 ## Requirements
 
-- Node.js `20.19+` or `22.12+`
-- npm `10+`
+- Bun `1.3.14+`
 
-If you manage Node with `nvm`, switch into a compatible runtime first:
+If you need Bun, install or upgrade it first:
 
 ```bash
-nvm use 25.8.0
+curl -fsSL https://bun.sh/install | bash
 ```
 
 ## Quick start
 
 ```bash
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 Vite serves the app on localhost and prints the active URL in the terminal.
@@ -44,16 +43,16 @@ The backend must be running separately — by default the app talks to
 
 | Command                 | Description                          |
 | ----------------------- | ------------------------------------ |
-| `npm run dev`           | Vite dev server with HMR             |
-| `npm run build`         | Production build to `dist/`          |
-| `npm run preview`       | Preview the production build locally |
-| `npm test`              | Run the Vitest suite once            |
-| `npm run test:watch`    | Vitest in watch mode                 |
-| `npm run test:coverage` | Vitest with v8 coverage reporting    |
-| `npm run lint`          | ESLint over the project              |
-| `npm run format`        | Prettier write                       |
-| `npm run format:check`  | Prettier check                       |
-| `npm run typecheck`     | `tsc --noEmit`                       |
+| `bun run dev`           | Vite dev server with HMR             |
+| `bun run build`         | Production build to `dist/`          |
+| `bun run preview`       | Preview the production build locally |
+| `bun run test`          | Run the Vitest suite once            |
+| `bun run test:watch`    | Vitest in watch mode                 |
+| `bun run test:coverage` | Vitest with v8 coverage reporting    |
+| `bun run lint`          | ESLint over the project              |
+| `bun run format`        | Prettier write                       |
+| `bun run format:check`  | Prettier check                       |
+| `bun run typecheck`     | `tsc --noEmit`                       |
 
 ## Routes
 
@@ -163,7 +162,7 @@ src/
 ## Testing
 
 ```bash
-npm test
+bun run test
 ```
 
 Tests use **Vitest** with the jsdom environment and React Testing Library.
@@ -175,10 +174,10 @@ contract drift with the backend is caught here.
 ## Linting, formatting, type-checking
 
 ```bash
-npm run lint
-npm run format         # write
-npm run format:check   # check only
-npm run typecheck
+bun run lint
+bun run format         # write
+bun run format:check   # check only
+bun run typecheck
 ```
 
 ## Versioning

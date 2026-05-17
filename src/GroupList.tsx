@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Link, useLoaderData } from 'react-router'
 
 import { groupBananas } from './lib/bananaUtils'
@@ -5,7 +6,7 @@ import type { Banana } from './types'
 
 const GroupList = () => {
   const bananas = useLoaderData<Banana[]>()
-  const groupedBananas = groupBananas(bananas)
+  const groupedBananas = useMemo(() => groupBananas(bananas), [bananas])
 
   return (
     <main className="page">

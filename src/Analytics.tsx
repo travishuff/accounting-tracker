@@ -1,5 +1,5 @@
 import { Link, useLoaderData } from 'react-router'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import type { ChangeEvent } from 'react'
 
 import './css/analytics.css'
@@ -7,13 +7,7 @@ import './css/analytics.css'
 import Dates from './Dates'
 import Margins from './Margins'
 import useLocalStorageState from './hooks/useLocalStorageState'
-import {
-  formatCurrency,
-  getBananasByTime,
-  getSoldBananas,
-  getUnsoldExpiredBananas,
-  getUnsoldUnexpiredBananas,
-} from './lib/bananaUtils'
+import { formatCurrency, getBananaSummary } from './lib/bananaUtils'
 import {
   endOfCurrentMonth,
   isStaleMonthDefault,
@@ -54,18 +48,18 @@ const Analytics = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const scopedBananas = getBananasByTime(bananas, settings.start, settings.end)
-  const soldBananas = getSoldBananas(scopedBananas)
-  const unsoldUnexpiredBananas = getUnsoldUnexpiredBananas(scopedBananas)
-  const unsoldExpiredBananas = getUnsoldExpiredBananas(scopedBananas)
+  const bananaSummary = useMemo(
+    () => getBananaSummary(bananas, settings.start, settings.end),
+    [bananas, settings.end, settings.start]
+  )
 
-  const soldBananasValue = soldBananas.length * settings.sellPrice
-  const totalBananasCost = scopedBananas.length * settings.buyPrice
+  const soldBananasValue = bananaSummary.soldCount * settings.sellPrice
+  const totalBananasCost = bananaSummary.scopedCount * settings.buyPrice
   const totalProfit = soldBananasValue - totalBananasCost
   const unsoldUnexpiredBananasValue =
-    unsoldUnexpiredBananas.length * settings.sellPrice
+    bananaSummary.unsoldUnexpiredCount * settings.sellPrice
   const unsoldExpiredBananasCost =
-    unsoldExpiredBananas.length * settings.buyPrice
+    bananaSummary.unsoldExpiredCount * settings.buyPrice
   const allOtherBananasCost = totalBananasCost - unsoldExpiredBananasCost
   const potentialProfit =
     soldBananasValue + unsoldUnexpiredBananasValue - totalBananasCost
@@ -117,7 +111,7 @@ const Analytics = () => {
           handleDateChange={handleDateChange}
           start={settings.start}
         />
-        {bananas.length > 0 && scopedBananas.length === 0 ? (
+        {bananas.length > 0 && bananaSummary.scopedCount === 0 ? (
           <div className="alert alert-info" role="status">
             No bananas fall inside the selected date range. {bananas.length}{' '}
             banana{bananas.length === 1 ? '' : 's'} sit outside it — adjust the
@@ -141,13 +135,13 @@ const Analytics = () => {
             <tbody>
               <tr>
                 <td>Bananas sold</td>
-                <td>{soldBananas.length}</td>
+                <td>{bananaSummary.soldCount}</td>
                 <td>{formatCurrency(settings.sellPrice)}</td>
                 <td className="positive">{formatCurrency(soldBananasValue)}</td>
               </tr>
               <tr>
                 <td>Unsold unexpired bananas</td>
-                <td>{unsoldUnexpiredBananas.length}</td>
+                <td>{bananaSummary.unsoldUnexpiredCount}</td>
                 <td>{formatCurrency(settings.sellPrice)}</td>
                 <td className="positive">
                   {formatCurrency(unsoldUnexpiredBananasValue)}
@@ -155,7 +149,7 @@ const Analytics = () => {
               </tr>
               <tr>
                 <td>Unsold expired bananas</td>
-                <td>{unsoldExpiredBananas.length}</td>
+                <td>{bananaSummary.unsoldExpiredCount}</td>
                 <td>{formatCurrency(settings.buyPrice)}</td>
                 <td className="negative">
                   {formatCurrency(unsoldExpiredBananasCost)}
@@ -163,7 +157,9 @@ const Analytics = () => {
               </tr>
               <tr>
                 <td>All other purchased bananas</td>
-                <td>{scopedBananas.length - unsoldExpiredBananas.length}</td>
+                <td>
+                  {bananaSummary.scopedCount - bananaSummary.unsoldExpiredCount}
+                </td>
                 <td>{formatCurrency(settings.buyPrice)}</td>
                 <td className="negative">
                   {formatCurrency(allOtherBananasCost)}
@@ -197,13 +193,13 @@ const Analytics = () => {
             <tbody>
               <tr>
                 <td>Bananas sold</td>
-                <td>{soldBananas.length}</td>
+                <td>{bananaSummary.soldCount}</td>
                 <td>{formatCurrency(settings.sellPrice)}</td>
                 <td className="positive">{formatCurrency(soldBananasValue)}</td>
               </tr>
               <tr>
                 <td>Bananas purchased</td>
-                <td>{scopedBananas.length}</td>
+                <td>{bananaSummary.scopedCount}</td>
                 <td>{formatCurrency(settings.buyPrice)}</td>
                 <td className="negative">{formatCurrency(totalBananasCost)}</td>
               </tr>

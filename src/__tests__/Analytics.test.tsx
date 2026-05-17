@@ -161,7 +161,9 @@ describe('Analytics', () => {
       )
 
       expect(
-        await screen.findByText(/no bananas fall inside the selected date range/i)
+        await screen.findByText(
+          /no bananas fall inside the selected date range/i
+        )
       ).toBeInTheDocument()
     } finally {
       vi.useRealTimers()

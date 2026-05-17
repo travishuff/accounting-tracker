@@ -1,5 +1,6 @@
 import {
   getAvailableBananas,
+  getBananaSummary,
   getBananasByTime,
   getUnsoldExpiredBananas,
   groupBananas,
@@ -88,5 +89,16 @@ describe('bananaUtils', () => {
 
   test('marks old unsold bananas as expired', () => {
     expect(getUnsoldExpiredBananas(DB, '2019-07-11')).toHaveLength(2)
+  })
+
+  test('summarizes scoped analytics counts in one pass', () => {
+    expect(
+      getBananaSummary(DB, '2019-06-01', '2019-06-30', '2019-07-11')
+    ).toEqual({
+      scopedCount: 2,
+      soldCount: 1,
+      unsoldExpiredCount: 1,
+      unsoldUnexpiredCount: 0,
+    })
   })
 })
