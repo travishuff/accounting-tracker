@@ -7,6 +7,13 @@ import {
 } from './date'
 import type { Banana, BananaGroup } from '../types'
 
+type BananaSummary = {
+  scopedCount: number
+  soldCount: number
+  unsoldExpiredCount: number
+  unsoldUnexpiredCount: number
+}
+
 export const getBananasByTime = (
   bananas: Banana[],
   start: string,
@@ -51,6 +58,42 @@ export const getUnsoldUnexpiredBananas = (
   getUnexpiredBananas(bananas, referenceDate).filter(
     ({ sellDate }) => sellDate === null
   )
+
+export const getBananaSummary = (
+  bananas: Banana[],
+  start: string,
+  end: string,
+  referenceDate: string = getTodayDate()
+): BananaSummary => {
+  const summary: BananaSummary = {
+    scopedCount: 0,
+    soldCount: 0,
+    unsoldExpiredCount: 0,
+    unsoldUnexpiredCount: 0,
+  }
+
+  for (const { buyDate, sellDate } of bananas) {
+    if (buyDate < start || buyDate > end) {
+      continue
+    }
+
+    if (sellDate !== null && (sellDate < start || sellDate > end)) {
+      continue
+    }
+
+    summary.scopedCount += 1
+
+    if (sellDate !== null) {
+      summary.soldCount += 1
+    } else if (isExpiredOn(buyDate, referenceDate)) {
+      summary.unsoldExpiredCount += 1
+    } else {
+      summary.unsoldUnexpiredCount += 1
+    }
+  }
+
+  return summary
+}
 
 export const getAvailableBananas = (bananas: Banana[], sellDate?: string) =>
   bananas.filter(({ buyDate }) => {
@@ -123,9 +166,11 @@ export const groupBananas = (
   return Array.from(groups.values())
 }
 
+const USD_FORMATTER = new Intl.NumberFormat('en-US', {
+  currency: 'USD',
+  minimumFractionDigits: 2,
+  style: 'currency',
+})
+
 export const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('en-US', {
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    style: 'currency',
-  }).format(Math.abs(value))
+  USD_FORMATTER.format(Math.abs(value))

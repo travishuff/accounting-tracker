@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useLoaderData } from 'react-router'
 
 import { sortBananas } from './lib/bananaUtils'
@@ -16,10 +16,9 @@ const FullList = () => {
     direction: 'ascending',
   })
 
-  const sortedBananas = sortBananas(
-    bananas,
-    sortConfig.column,
-    sortConfig.direction
+  const sortedBananas = useMemo(
+    () => sortBananas(bananas, sortConfig.column, sortConfig.direction),
+    [bananas, sortConfig.column, sortConfig.direction]
   )
 
   const handleSort = (column: keyof Banana) => {

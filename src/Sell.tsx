@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { useLoaderData, useRevalidator } from 'react-router'
 
@@ -32,8 +32,11 @@ const Sell = () => {
   const [feedback, setFeedback] = useState<Feedback | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const unsoldBananas = getUnsoldBananas(bananas)
-  const availableBananas = getAvailableBananas(unsoldBananas, form.sellDate)
+  const unsoldBananas = useMemo(() => getUnsoldBananas(bananas), [bananas])
+  const availableBananas = useMemo(
+    () => getAvailableBananas(unsoldBananas, form.sellDate),
+    [form.sellDate, unsoldBananas]
+  )
 
   const validate = () => {
     const nextErrors: FieldErrors = {}
