@@ -6,8 +6,9 @@ A small React 19 single-page app for tracking a banana inventory: record
 purchases, sell from inventory under a 10-day freshness window, browse the
 historical ledger, and inspect margin scenarios.
 
-The companion backend lives at `banana-backend` and exposes the REST API this
-app consumes.
+The companion backend lives at
+[banana-backend](https://github.com/travishuff/accounting-tracker-backend) and
+exposes the REST API this app consumes.
 
 ## Stack
 
