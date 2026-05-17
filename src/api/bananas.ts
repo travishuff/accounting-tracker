@@ -49,3 +49,8 @@ export const sellBananas = (payload: { number: number; sellDate: string }) =>
     body: JSON.stringify(payload),
     method: 'POST',
   })
+
+export const resetDatabase = () =>
+  request<{ deleted: number }>('/api/database', {
+    method: 'DELETE',
+  })

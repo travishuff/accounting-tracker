@@ -1,4 +1,5 @@
 .obsidian/
+.claude/
 .github/
 coverage/
 dist/
