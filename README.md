@@ -1,4 +1,4 @@
-# Banana Tracker
+# Accounting Tracker
 
 ![Version](https://img.shields.io/github/package-json/v/travishuff/accounting-tracker?label=version)
 
@@ -7,8 +7,8 @@ purchases, sell from inventory under a 10-day freshness window, browse the
 historical ledger, and inspect margin scenarios.
 
 The companion backend lives at
-[banana-backend](https://github.com/travishuff/accounting-tracker-backend) and
-exposes the REST API this app consumes.
+[accounting-tracker-backend](https://github.com/travishuff/accounting-tracker-backend)
+and exposes the REST API this app consumes.
 
 ## Stack
 
@@ -24,7 +24,7 @@ exposes the REST API this app consumes.
 
 - Bun `1.3.14+`
 - No external services are required; the app talks to a locally running
-  `banana-backend` API by default.
+  accounting-tracker-backend API by default.
 
 If you need Bun, install or upgrade it first:
 
@@ -83,7 +83,7 @@ The frontend reads one env variable at build time:
 
 | Variable            | Default                 | Description                      |
 | ------------------- | ----------------------- | -------------------------------- |
-| `VITE_API_BASE_URL` | `http://localhost:8080` | Origin of the banana-backend API |
+| `VITE_API_BASE_URL` | `http://localhost:8080` | Origin of the accounting-tracker-backend API |
 
 To point at a different backend, create a `.env` file at the repo root:
 
@@ -96,7 +96,7 @@ A trailing slash on the value is stripped before requests are made.
 ## Backend API
 
 All requests go through [src/api/bananas.ts](src/api/bananas.ts). The app
-expects banana-backend's contract:
+expects the accounting-tracker-backend's contract:
 
 | Method   | Path                 | Body                   | Success | Notes                                                                          |
 | -------- | -------------------- | ---------------------- | ------- | ------------------------------------------------------------------------------ |
