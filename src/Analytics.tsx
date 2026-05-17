@@ -1,11 +1,12 @@
-import { Link, useLoaderData } from 'react-router'
-import { useEffect, useMemo } from 'react'
+import { Link, useLoaderData, useRevalidator } from 'react-router'
+import { useEffect, useMemo, useState } from 'react'
 import type { ChangeEvent } from 'react'
 
 import './css/analytics.css'
 
 import Dates from './Dates'
 import Margins from './Margins'
+import { resetDatabase } from './api/bananas'
 import useLocalStorageState from './hooks/useLocalStorageState'
 import { formatCurrency, getBananaSummary } from './lib/bananaUtils'
 import {
@@ -22,6 +23,11 @@ type AnalyticsSettings = {
   start: string
 }
 
+type Feedback = {
+  message: string
+  type: 'error' | 'success'
+}
+
 const DEFAULT_ANALYTICS_SETTINGS: AnalyticsSettings = {
   buyPrice: 0.2,
   end: endOfCurrentMonth(),
@@ -31,10 +37,13 @@ const DEFAULT_ANALYTICS_SETTINGS: AnalyticsSettings = {
 
 const Analytics = () => {
   const bananas = useLoaderData<Banana[]>()
+  const revalidator = useRevalidator()
   const [settings, setSettings] = useLocalStorageState<AnalyticsSettings>(
     'banana-tracker.analytics',
     DEFAULT_ANALYTICS_SETTINGS
   )
+  const [feedback, setFeedback] = useState<Feedback | null>(null)
+  const [isResetting, setIsResetting] = useState(false)
 
   useEffect(() => {
     if (isStaleMonthDefault(settings.start, settings.end)) {
@@ -82,8 +91,29 @@ const Analytics = () => {
     }))
   }
 
-  const resetFields = () => {
-    setSettings(DEFAULT_ANALYTICS_SETTINGS)
+  const resetFields = async () => {
+    setIsResetting(true)
+    setFeedback(null)
+
+    try {
+      const { deleted } = await resetDatabase()
+      setSettings(DEFAULT_ANALYTICS_SETTINGS)
+      setFeedback({
+        message: `Database reset. Deleted ${deleted} banana${deleted === 1 ? '' : 's'}.`,
+        type: 'success',
+      })
+      revalidator.revalidate()
+    } catch (error: unknown) {
+      setFeedback({
+        message:
+          error instanceof Error
+            ? error.message
+            : 'The database reset request failed.',
+        type: 'error',
+      })
+    } finally {
+      setIsResetting(false)
+    }
   }
 
   return (
@@ -223,12 +253,18 @@ const Analytics = () => {
       />
 
       <div>
+        {feedback ? (
+          <div className={`alert alert-${feedback.type}`}>
+            {feedback.message}
+          </div>
+        ) : null}
         <button
           className="btn btn-secondary"
+          disabled={isResetting}
           type="button"
           onClick={resetFields}
         >
-          Reset All Fields
+          {isResetting ? 'Resetting…' : 'Reset All Fields'}
         </button>
       </div>
     </main>

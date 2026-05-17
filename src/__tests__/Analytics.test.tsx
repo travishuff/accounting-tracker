@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { MemoryRouter, useLoaderData } from 'react-router'
+import { MemoryRouter, useLoaderData, useRevalidator } from 'react-router'
 
 import Analytics from '../Analytics'
 import type { Banana } from '../types'
@@ -10,10 +10,13 @@ vi.mock('react-router', async (importOriginal) => {
   return {
     ...actual,
     useLoaderData: vi.fn(),
+    useRevalidator: vi.fn(),
   }
 })
 
 const mockedUseLoaderData = vi.mocked(useLoaderData)
+const mockedUseRevalidator = vi.mocked(useRevalidator)
+const revalidate = vi.fn()
 
 const ANALYTICS_DB: Banana[] = [
   {
@@ -32,9 +35,14 @@ describe('Analytics', () => {
   beforeEach(() => {
     window.localStorage.clear()
     mockedUseLoaderData.mockReturnValue(ANALYTICS_DB)
+    mockedUseRevalidator.mockReturnValue({
+      revalidate,
+      state: 'idle',
+    })
   })
 
   afterEach(() => {
+    vi.unstubAllGlobals()
     vi.clearAllMocks()
   })
 
@@ -202,5 +210,35 @@ describe('Analytics', () => {
     } finally {
       vi.useRealTimers()
     }
+  })
+
+  test('resets the database and refreshes analytics data', async () => {
+    const fetch = vi.fn().mockResolvedValue({
+      json: async () => ({ deleted: 2 }),
+      ok: true,
+      status: 200,
+    })
+    vi.stubGlobal('fetch', fetch)
+
+    render(
+      <MemoryRouter>
+        <Analytics />
+      </MemoryRouter>
+    )
+
+    fireEvent.click(
+      await screen.findByRole('button', { name: /reset all fields/i })
+    )
+
+    expect(fetch).toHaveBeenCalledWith(
+      'http://localhost:8080/api/database',
+      expect.objectContaining({
+        method: 'DELETE',
+      })
+    )
+    expect(
+      await screen.findByText(/database reset\. deleted 2 bananas\./i)
+    ).toBeInTheDocument()
+    expect(revalidate).toHaveBeenCalled()
   })
 })
