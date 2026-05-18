@@ -22,6 +22,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
+        loader: bananasLoader,
         element: <Home />,
       },
       {

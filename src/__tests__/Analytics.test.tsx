@@ -227,7 +227,7 @@ describe('Analytics', () => {
     )
 
     fireEvent.click(
-      await screen.findByRole('button', { name: /reset all fields/i })
+      await screen.findByRole('button', { name: /reset database and filters/i })
     )
 
     expect(fetch).toHaveBeenCalledWith(

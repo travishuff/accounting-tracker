@@ -65,7 +65,7 @@ describe('Sell', () => {
     )
 
     expect(
-      await screen.findByText(/2 unsold bananas in inventory/i)
+      await screen.findByText(/2 unsold in inventory/i)
     ).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText(/sale date/i), {
@@ -74,7 +74,7 @@ describe('Sell', () => {
     fireEvent.change(screen.getByLabelText(/quantity/i), {
       target: { value: '3' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.click(screen.getByRole('button', { name: /record sale/i }))
 
     expect(
       await screen.findByText(/only 2 bananas can be sold on that date/i)
@@ -100,10 +100,10 @@ describe('Sell', () => {
     fireEvent.change(screen.getByLabelText(/quantity/i), {
       target: { value: '2' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.click(screen.getByRole('button', { name: /record sale/i }))
 
     await waitFor(() =>
-      expect(screen.getByText(/you sold bananas/i)).toBeInTheDocument()
+      expect(screen.getByText(/2 bananas marked sold/i)).toBeInTheDocument()
     )
 
     expect(fetchMock).toHaveBeenCalledWith(
@@ -137,7 +137,7 @@ describe('Sell', () => {
     fireEvent.change(screen.getByLabelText(/quantity/i), {
       target: { value: '2' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.click(screen.getByRole('button', { name: /record sale/i }))
 
     expect(
       await screen.findByText(/only 1 banana\(s\) eligible to sell/i)

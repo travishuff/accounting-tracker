@@ -90,7 +90,10 @@ const Sell = () => {
       })
       setForm(INITIAL_FORM)
       setErrors({})
-      setFeedback({ message: 'You sold bananas.', type: 'success' })
+      setFeedback({
+        message: `${form.number} banana${Number(form.number) === 1 ? '' : 's'} marked sold.`,
+        type: 'success',
+      })
       revalidator.revalidate()
     } catch (error: unknown) {
       setFeedback({
@@ -109,13 +112,17 @@ const Sell = () => {
         <div>
           <h1 className="page-title">Sell Bananas</h1>
           <p className="section-copy">
-            Sales are constrained by inventory availability and the 10-day shelf
-            life window.
+            Mark eligible bananas as sold. Availability updates as the sale date
+            changes.
           </p>
         </div>
         <div className="info-strip">
-          <span>{unsoldBananas.length} unsold bananas in inventory</span>
-          <span>{availableBananas.length} sellable on the selected date</span>
+          <span>{unsoldBananas.length} unsold in inventory</span>
+          <span>
+            {form.sellDate
+              ? `${availableBananas.length} sellable for this date`
+              : 'Choose a sale date to preview sellable stock'}
+          </span>
         </div>
         <form className="stack" onSubmit={handleSubmit}>
           <div className="form-row">
@@ -160,7 +167,7 @@ const Sell = () => {
               disabled={isSubmitting}
               type="submit"
             >
-              {isSubmitting ? 'Saving…' : 'Submit'}
+              {isSubmitting ? 'Saving…' : 'Record sale'}
             </button>
             <button
               className="btn btn-secondary"

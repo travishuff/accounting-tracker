@@ -38,10 +38,12 @@ describe('Buy', () => {
     fireEvent.change(screen.getByLabelText(/purchase date/i), {
       target: { value: '2026-03-06' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.click(screen.getByRole('button', { name: /record purchase/i }))
 
     await waitFor(() =>
-      expect(screen.getByText(/you bought bananas/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/12 bananas added to inventory/i)
+      ).toBeInTheDocument()
     )
 
     expect(fetchMock).toHaveBeenCalledWith(
@@ -56,7 +58,7 @@ describe('Buy', () => {
   test('blocks invalid dates and quantities', async () => {
     render(<Buy />)
 
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.click(screen.getByRole('button', { name: /record purchase/i }))
 
     expect(
       await screen.findByText(/fix the highlighted fields before submitting/i)

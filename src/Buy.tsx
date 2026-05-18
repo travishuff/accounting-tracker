@@ -77,7 +77,10 @@ const Buy = () => {
       })
       setForm(INITIAL_FORM)
       setErrors({})
-      setFeedback({ message: 'You bought bananas.', type: 'success' })
+      setFeedback({
+        message: `${form.number} banana${Number(form.number) === 1 ? '' : 's'} added to inventory.`,
+        type: 'success',
+      })
     } catch (error: unknown) {
       setFeedback({
         message:
@@ -97,8 +100,8 @@ const Buy = () => {
         <div>
           <h1 className="page-title">Buy Bananas</h1>
           <p className="section-copy">
-            Record a purchase batch. The backend expands the quantity into
-            individual banana rows.
+            Add a purchase batch to inventory. Each banana is tracked as its own
+            ledger row.
           </p>
         </div>
         <form className="stack" onSubmit={handleSubmit}>
@@ -144,7 +147,7 @@ const Buy = () => {
               disabled={isSubmitting}
               type="submit"
             >
-              {isSubmitting ? 'Saving…' : 'Submit'}
+              {isSubmitting ? 'Saving…' : 'Record purchase'}
             </button>
             <button
               className="btn btn-secondary"
