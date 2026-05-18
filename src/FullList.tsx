@@ -31,63 +31,74 @@ const FullList = () => {
     }))
   }
 
-  const sortLabel = (column: keyof Banana) =>
-    sortConfig.column === column ? ` (${sortConfig.direction})` : ''
+  const sortLabel = (column: keyof Banana) => {
+    if (sortConfig.column !== column) {
+      return ''
+    }
+
+    return sortConfig.direction === 'ascending'
+      ? ' sorted ascending'
+      : ' sorted descending'
+  }
 
   return (
     <main className="page">
       <section className="card stack">
         <h1 className="page-title">
-          <Link className="back-link" to="/analytics">
-            ← Analytics
+          <Link className="back-link" to="/">
+            ← Dashboard
           </Link>
           Full List of Bananas
         </h1>
 
-        <div className="table-wrap">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>
-                  <button
-                    className="table-sort"
-                    type="button"
-                    onClick={() => handleSort('id')}
-                  >
-                    ID ({bananas.length} total){sortLabel('id')}
-                  </button>
-                </th>
-                <th>
-                  <button
-                    className="table-sort"
-                    type="button"
-                    onClick={() => handleSort('buyDate')}
-                  >
-                    Buy Date{sortLabel('buyDate')}
-                  </button>
-                </th>
-                <th>
-                  <button
-                    className="table-sort"
-                    type="button"
-                    onClick={() => handleSort('sellDate')}
-                  >
-                    Sell Date{sortLabel('sellDate')}
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedBananas.map(({ buyDate, sellDate, id }) => (
-                <tr key={id}>
-                  <td>{id}</td>
-                  <td>{buyDate}</td>
-                  <td>{sellDate ?? 'null'}</td>
+        {sortedBananas.length > 0 ? (
+          <div className="table-wrap">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>
+                    <button
+                      className="table-sort"
+                      type="button"
+                      onClick={() => handleSort('id')}
+                    >
+                      ID ({bananas.length} total){sortLabel('id')}
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      className="table-sort"
+                      type="button"
+                      onClick={() => handleSort('buyDate')}
+                    >
+                      Buy Date{sortLabel('buyDate')}
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      className="table-sort"
+                      type="button"
+                      onClick={() => handleSort('sellDate')}
+                    >
+                      Sell Date{sortLabel('sellDate')}
+                    </button>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {sortedBananas.map(({ buyDate, sellDate, id }) => (
+                  <tr key={id}>
+                    <td>{id}</td>
+                    <td>{buyDate}</td>
+                    <td>{sellDate ?? 'Unsold'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="empty-state">No bananas have been recorded yet.</div>
+        )}
       </section>
     </main>
   )

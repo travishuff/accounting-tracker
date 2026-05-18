@@ -8,7 +8,7 @@ type MarginsProps = {
 
 const Margins = ({ buyPrice, sellPrice, handlePriceChange }: MarginsProps) => {
   return (
-    <section className="card stack">
+    <section className="panel stack">
       <div>
         <h3 className="section-title">Experiment with your margins</h3>
         <p className="section-copy">

@@ -22,6 +22,12 @@ const NavBar = () => {
         <NavLink className={navClassName} to="/sell">
           Sell
         </NavLink>
+        <NavLink className={navClassName} to="/groups">
+          Groups
+        </NavLink>
+        <NavLink className={navClassName} to="/list">
+          List
+        </NavLink>
       </div>
     </nav>
   )
