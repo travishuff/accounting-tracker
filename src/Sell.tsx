@@ -126,10 +126,13 @@ const Sell = () => {
         </div>
         <form className="stack" onSubmit={handleSubmit}>
           <div className="form-row">
-            <label className="field">
-              <span className="field-label">Quantity</span>
+            <div className="field">
+              <label className="field-label" htmlFor="sell-quantity">
+                Quantity
+              </label>
               <input
                 className="field-input"
+                id="sell-quantity"
                 max="50"
                 min="1"
                 name="number"
@@ -137,27 +140,38 @@ const Sell = () => {
                 type="number"
                 value={form.number}
                 onChange={handleChange}
+                aria-invalid={errors.number ? 'true' : undefined}
+                aria-describedby={errors.number ? 'sell-quantity-error' : undefined}
               />
               {errors.number ? (
-                <span className="field-error">{errors.number}</span>
+                <span className="field-error" id="sell-quantity-error">
+                  {errors.number}
+                </span>
               ) : null}
-            </label>
-            <label className="field">
-              <span className="field-label">Sale date</span>
+            </div>
+            <div className="field">
+              <label className="field-label" htmlFor="sell-date">
+                Sale date
+              </label>
               <input
                 className="field-input"
+                id="sell-date"
                 name="sellDate"
                 type="date"
                 value={form.sellDate}
                 onChange={handleChange}
+                aria-invalid={errors.sellDate ? 'true' : undefined}
+                aria-describedby={errors.sellDate ? 'sell-date-error' : undefined}
               />
               {errors.sellDate ? (
-                <span className="field-error">{errors.sellDate}</span>
+                <span className="field-error" id="sell-date-error">
+                  {errors.sellDate}
+                </span>
               ) : null}
-            </label>
+            </div>
           </div>
           {feedback ? (
-            <div className={`alert alert-${feedback.type}`}>
+            <div className={`alert alert-${feedback.type}`} role="alert">
               {feedback.message}
             </div>
           ) : null}
