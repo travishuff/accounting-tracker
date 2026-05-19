@@ -241,17 +241,19 @@ const Analytics = () => {
                     {formatCurrency(allOtherBananasCost)}
                   </td>
                 </tr>
+              </tbody>
+              <tfoot>
                 <tr>
-                  <td colSpan={3} className="table-summary-label">
+                  <th scope="row" colSpan={3} className="table-summary-label">
                     Potential Profit/Loss
-                  </td>
+                  </th>
                   <td
                     className={potentialProfit >= 0 ? 'positive' : 'negative'}
                   >
                     {formatCurrency(potentialProfit)}
                   </td>
                 </tr>
-              </tbody>
+              </tfoot>
             </table>
           </div>
         </article>
@@ -290,15 +292,17 @@ const Analytics = () => {
                     {formatCurrency(totalBananasCost)}
                   </td>
                 </tr>
+              </tbody>
+              <tfoot>
                 <tr>
-                  <td colSpan={3} className="table-summary-label">
+                  <th scope="row" colSpan={3} className="table-summary-label">
                     Profit/Loss
-                  </td>
+                  </th>
                   <td className={totalProfit >= 0 ? 'positive' : 'negative'}>
                     {formatCurrency(totalProfit)}
                   </td>
                 </tr>
-              </tbody>
+              </tfoot>
             </table>
           </div>
         </article>

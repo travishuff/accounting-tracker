@@ -31,14 +31,16 @@ const FullList = () => {
     }))
   }
 
-  const sortLabel = (column: keyof Banana) => {
+  const sortIndicator = (column: keyof Banana) => {
     if (sortConfig.column !== column) {
-      return ''
+      return null
     }
 
-    return sortConfig.direction === 'ascending'
-      ? ' sorted ascending'
-      : ' sorted descending'
+    return (
+      <span aria-hidden="true" style={{ fontSize: '0.65rem', marginLeft: '0.25rem' }}>
+        {sortConfig.direction === 'ascending' ? '▲' : '▼'}
+      </span>
+    )
   }
 
   return (
@@ -56,31 +58,31 @@ const FullList = () => {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>
+                  <th aria-sort={sortConfig.column === 'id' ? sortConfig.direction : 'none'}>
                     <button
                       className="table-sort"
                       type="button"
                       onClick={() => handleSort('id')}
                     >
-                      ID ({bananas.length} total){sortLabel('id')}
+                      ID ({bananas.length} total){sortIndicator('id')}
                     </button>
                   </th>
-                  <th>
+                  <th aria-sort={sortConfig.column === 'buyDate' ? sortConfig.direction : 'none'}>
                     <button
                       className="table-sort"
                       type="button"
                       onClick={() => handleSort('buyDate')}
                     >
-                      Buy Date{sortLabel('buyDate')}
+                      Buy Date{sortIndicator('buyDate')}
                     </button>
                   </th>
-                  <th>
+                  <th aria-sort={sortConfig.column === 'sellDate' ? sortConfig.direction : 'none'}>
                     <button
                       className="table-sort"
                       type="button"
                       onClick={() => handleSort('sellDate')}
                     >
-                      Sell Date{sortLabel('sellDate')}
+                      Sell Date{sortIndicator('sellDate')}
                     </button>
                   </th>
                 </tr>

@@ -6,10 +6,15 @@ import NavBar from './NavBar'
 const AppLayout = () => {
   return (
     <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <NavBar />
-      <Suspense fallback={<div className="page-loading">Loading…</div>}>
-        <Outlet />
-      </Suspense>
+      <div id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
+        <Suspense fallback={<div className="page-loading">Loading…</div>}>
+          <Outlet />
+        </Suspense>
+      </div>
     </>
   )
 }
